@@ -2,9 +2,10 @@
 
 module Danger
   class MessageGroup
-    def initialize(file: nil, line: nil)
+    def initialize(file: nil, line: nil, extras:nil)
       @file = file
       @line = line
+      @extras = extras
     end
 
     # Returns whether this `MessageGroup` is for the same line of code as
@@ -48,7 +49,7 @@ module Danger
       @messages ||= []
     end
 
-    attr_reader :file, :line
+    attr_reader :file, :line, :extras
 
     # @return a hash of statistics. Currently only :warnings_count and
     # :errors_count

@@ -344,11 +344,17 @@ module Danger
 
           if matching_comments.empty?
             begin
-              client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
-                                                 body, head_ref, m.file, position)
+              if m.extras && (m.extras[:start_line] < m.extras[:line])
+                # m.extras = { start_line: 1, line: 2, side: "RIGHT", start_side: "RIGHT" }
+                client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
+                                                   body, head_ref, m.file, position, m.extras)
+              else
+                client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
+                                                   body, head_ref, m.file, position)
+              end
             rescue Octokit::UnprocessableEntity => e
               # Show more detail for UnprocessableEntity error
-              message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n")
+              message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}", "line: #{m.line}", "extras: #{m.extras}"].join("\n")
               puts message
 
               # Not reject because this comment has not completed

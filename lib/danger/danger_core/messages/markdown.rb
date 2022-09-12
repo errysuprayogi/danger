@@ -4,8 +4,8 @@ require "danger/danger_core/messages/base"
 module Danger
   class Markdown < BaseMessage
 
-    def initialize(message, file = nil, line = nil)
-      super(type: :markdown, message: message, file: file, line: line)
+    def initialize(message, file = nil, line = nil, extras = nil)
+      super(type: :markdown, message: message, file: file, line: line, extras: extras)
     end
 
     def ==(other)
@@ -14,7 +14,8 @@ module Danger
 
       other.message == message &&
         other.file == file &&
-        other.line == line
+        other.line == line &&
+        other.extras = extras
     end
 
     def hash
@@ -22,6 +23,7 @@ module Danger
       h = h * 31 + message.hash
       h = h * 17 + file.hash
       h = h * 17 + line.hash
+      h = h * 17 + extras.hash
       h
     end
 
@@ -29,6 +31,7 @@ module Danger
       extra = []
       extra << "file: #{file}" unless file
       extra << "line: #{line}" unless line
+      extra << "extras: #{extras}" unless extras
 
       "Markdown #{message} { #{extra.join ', '.freeze} }"
     end

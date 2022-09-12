@@ -233,8 +233,13 @@ module Danger
         if status[:markdowns].count > 0
           ui.title("Markdown:") do
             status[:markdowns].each do |current_markdown|
-              ui.puts "#{current_markdown.file}\#L#{current_markdown.line}" if current_markdown.file && current_markdown.line
-              ui.puts current_markdown.message
+              if current_markdown.file && current_markdown.line && current_markdown.extras
+                ui.puts "#{current_markdown.file}\#L#{current_markdown.extras[:start_line]}-L#{current_markdown.extras[:line]} #{current_markdown.message}"
+              elsif current_markdown.file && current_markdown.line && current_markdown.extras.nil?
+                ui.puts "#{current_markdown.file}\#L#{current_markdown.line} #{current_markdown.message}"
+              else
+                ui.puts current_markdown.message
+              end
             end
           end
         end
@@ -317,10 +322,11 @@ module Danger
           rows.each do |row|
             if row.file && row.line
               path = "#{row.file}\#L#{row.line}: "
+            elsif row.file && row.line && row.extras
+              path = "#{row.file}\#L#{row.extras['start_line']}-L#{row.extras['line']}: "
             else
               path = ""
             end
-
             ui.puts("- [ ] #{path}#{row.message}")
           end
         end

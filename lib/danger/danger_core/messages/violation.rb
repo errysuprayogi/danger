@@ -7,10 +7,10 @@ module Danger
     VALID_TYPES = %I[error warning message].freeze
     attr_accessor :sticky
 
-    def initialize(message, sticky, file = nil, line = nil, type: :warning)
+    def initialize(message, sticky, file = nil, line = nil, extras = nil, type: :warning)
       raise ArgumentError unless VALID_TYPES.include?(type)
 
-      super(type: type, message: message, file: file, line: line)
+      super(type: type, message: message, file: file, line: line, extras: extras)
       self.sticky = sticky
     end
 
@@ -21,7 +21,8 @@ module Danger
       other.message == message &&
         other.sticky == sticky &&
         other.file == file &&
-        other.line == line
+        other.line == line &&
+        other.extras == extras
     end
 
     def hash
@@ -30,6 +31,7 @@ module Danger
       h = h * 13 + sticky.hash
       h = h * 17 + file.hash
       h = h * 17 + line.hash
+      h = h * 17 + extras.hash
       h
     end
 
@@ -46,6 +48,7 @@ module Danger
       extra << "sticky: #{sticky}"
       extra << "file: #{file}" if file
       extra << "line: #{line}" if line
+      extra << "extras: #{extras}" if extras
       extra << "type: #{type}"
 
       "Violation #{message} { #{extra.join ', '} }"
