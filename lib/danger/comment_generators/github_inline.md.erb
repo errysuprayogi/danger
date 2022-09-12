@@ -19,3 +19,5 @@
 <%- end -%>
 <%# We need to add the generated_by_ to identify comments from danger. But with inlines %>
 <%# it might be a little annoying, so we set on the table, but if we have markdown we add the footer anyway %>
+
+<%= "```suggestion\n#{@comment}\n```" unless @comment.nil? %>

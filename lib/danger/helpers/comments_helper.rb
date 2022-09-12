@@ -52,7 +52,7 @@ module Danger
         html = markdown_parser(message).to_html
         # Remove the outer `<p>` and `</p>`.
         html = html.strip.sub(%r{\A<p>(.*)</p>\z}m, '\1')
-        Violation.new(html, violation.sticky, violation.file, violation.line)
+        Violation.new(html, violation.sticky, violation.file, violation.line, comment: violation.comment)
       end
 
       def table(name, emoji, violations, all_previous_violations, template: "github")
@@ -77,7 +77,7 @@ module Danger
         }
       end
 
-      def apply_template(tables: [], markdowns: [], danger_id: "danger", template: "github", request_source: template)
+      def apply_template(tables: [], markdowns: [], comment: nil, danger_id: "danger", template: "github", request_source: template)
         require "erb"
 
         md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}.md.erb")
@@ -86,6 +86,7 @@ module Danger
         # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
         @tables = tables
         @markdowns = markdowns.map(&:message)
+        @comment = comment
         @danger_id = danger_id
         @emoji_mapper = EmojiMapper.new(request_source.sub("_inline",""))
 
@@ -133,6 +134,7 @@ module Danger
                                        template: "github")
         apply_template(
           tables: [{ content: [message], resolved: resolved, emoji: emoji }],
+          comment: message.comment,
           danger_id: danger_id,
           template: "#{template}_inline"
         )

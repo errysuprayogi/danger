@@ -327,7 +327,7 @@ module Danger
             else
               path = ""
             end
-            ui.puts("- [ ] #{path}#{row.message}")
+            ui.puts("- [ ] #{path}#{row.message} #{row.comment}")
           end
         end
       end
