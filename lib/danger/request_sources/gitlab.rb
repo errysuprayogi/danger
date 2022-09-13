@@ -298,7 +298,7 @@ module Danger
       def markdown_link_to_message(message, _)
         "#{message.file}#L#{message.line}: "
       end
-      
+
       # @return [String] The organisation name, is nil if it can't be detected
       def organisation
         nil # TODO: Implement this
@@ -416,7 +416,7 @@ module Danger
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "gitlab")
           else
             # Hide the inline link behind a span
-            m = process_markdown(m, true)
+            m = process_violations(m, true)
             body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "gitlab")
             # A comment might be in previous_violations because only now it's part of the unified diff
             # We remove from the array since it won't have a place in the table anymore

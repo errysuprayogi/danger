@@ -398,7 +398,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           )
 
           v = Danger::Violation.new("Updated danger comment", true, "a", 1)
-          body = subject.generate_inline_comment_body("warning", subject.process_markdown(v, true), danger_id: "danger", template: "gitlab")
+          body = subject.generate_inline_comment_body("warning", subject.process_violations(v, true), danger_id: "danger", template: "gitlab")
 
           expect(subject.client).to receive(:update_merge_request_discussion_note).with("k0nserv/danger-test", 1, "f5fd1ab23556baa6683b4b3b36ec4455f8b500f4", 141485123, body: body)
           allow(subject.client).to receive(:update_merge_request_discussion_note)

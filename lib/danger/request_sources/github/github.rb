@@ -320,7 +320,7 @@ module Danger
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "github")
           else
             # Hide the inline link behind a span
-            m = process_markdown(m, true)
+            m = process_violations(m, true)
             body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "github")
             # A comment might be in previous_violations because only now it's part of the unified diff
             # We remove from the array since it won't have a place in the table anymore
@@ -344,6 +344,7 @@ module Danger
 
           if matching_comments.empty?
             begin
+              p "submit_inline_comments_for_kind! #{m.to_s}"
               if m.extras && (m.extras[:start_line] < m.extras[:line])
                 # m.extras = { start_line: 1, line: 2, side: "RIGHT", start_side: "RIGHT" }
                 client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
@@ -366,6 +367,7 @@ module Danger
 
             # Update the comment to remove the strikethrough if present
             comment = matching_comments.first
+            p "update_pull_request_comment #{comment["id"]}"
             client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
           end
 

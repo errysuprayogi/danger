@@ -45,19 +45,19 @@ module Danger
         m1 == m2
       end
 
-      def process_markdown(violation, hide_link = false)
+      def process_violations(violation, hide_link = false)
         message = violation.message
         message = "#{markdown_link_to_message(violation, hide_link)}#{message}" if violation.file && violation.line
 
         html = markdown_parser(message).to_html
         # Remove the outer `<p>` and `</p>`.
         html = html.strip.sub(%r{\A<p>(.*)</p>\z}m, '\1')
-        Violation.new(html, violation.sticky, violation.file, violation.line, comment: violation.comment)
+        Violation.new(html, violation.sticky, violation.file, violation.line, violation.extras, violation.comment)
       end
 
       def table(name, emoji, violations, all_previous_violations, template: "github")
         content = violations
-        content = content.map { |v| process_markdown(v) } unless ["bitbucket_server", "vsts"].include?(template)
+        content = content.map { |v| process_violations(v) } unless ["bitbucket_server", "vsts"].include?(template)
 
         kind = table_kind_from_title(name)
         previous_violations = all_previous_violations[kind] || []

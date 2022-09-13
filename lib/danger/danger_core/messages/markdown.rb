@@ -14,8 +14,7 @@ module Danger
 
       other.message == message &&
         other.file == file &&
-        other.line == line &&
-        other.extras = extras
+        other.line == line
     end
 
     def hash
@@ -23,7 +22,6 @@ module Danger
       h = h * 31 + message.hash
       h = h * 17 + file.hash
       h = h * 17 + line.hash
-      h = h * 17 + extras.hash
       h
     end
 

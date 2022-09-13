@@ -126,7 +126,7 @@ module Danger
       comment = options.fetch(:comment, nil)
 
       messages.flatten.each do |message|
-        @messages << Violation.new(message, sticky, file, line, extras, comment: comment, type: :message) if message
+        @messages << Violation.new(message, sticky, file, line, extras, comment, type: :message) if message
       end
     end
 
@@ -152,7 +152,7 @@ module Danger
       comment = options.fetch(:comment, nil)
       warnings.flatten.each do |warning|
         next if should_ignore_violation(warning)
-        @warnings << Violation.new(warning, sticky, file, line, extras, comment: comment, type: :warning) if warning
+        @warnings << Violation.new(warning, sticky, file, line, extras, comment, type: :warning) if warning
       end
     end
 
@@ -178,7 +178,7 @@ module Danger
       comment = options.fetch(:comment, nil)
       failures.flatten.each do |failure|
         next if should_ignore_violation(failure)
-        @errors << Violation.new(failure, sticky, file, line, extras, comment: comment, type: :error) if failure
+        @errors << Violation.new(failure, sticky, file, line, extras, comment, type: :error) if failure
       end
     end
 
